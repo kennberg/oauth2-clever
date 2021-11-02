@@ -111,21 +111,25 @@ class Clever extends AbstractProvider
     }
     
     /**
-     * Get Access Token Options
-     * 
-     * Override to add a Basic Auth header needed when 
+     * Returns all headers used by this provider for a request.
+     *
+     * Override to add a Basic Auth header needed when
      * requesting an access token from Clever
      *
-     * @param  array $params Access token params
-     * @return array Default Headers
+     * @param  mixed|null $token object or string
+     * @return array
      */
-     protected function getAccessTokenOptions(array $params)
-     {
-         $options = parent::getAccessTokenOptions($params);
-         $options['headers']['authorization'] = 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret);
+    public function getHeaders($token = null)
+    {
+        $headers = parent::getHeaders($token);
 
-         return $options;
-     }
+        if ($token == null)
+        {
+          $headers['authorization'] = 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret);
+        }
+
+        return $headers;
+    }
     
     /**
      * Check response for errors
